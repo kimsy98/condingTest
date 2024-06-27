@@ -6,7 +6,7 @@ import java.util.StringTokenizer;
 
 public class Main {
 	
-	static int n,m;
+	
 	static int[] arr;
 	static int[] res;
 	static boolean[] check;
@@ -16,8 +16,8 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st  =new StringTokenizer(br.readLine());
 		
-		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
 		
 		arr = new int[n];
 		check = new boolean[n];
@@ -30,21 +30,21 @@ public class Main {
 		
 		Arrays.sort(arr);
 		
-		dfs(0);
+		dfs(n,m,0);
 		System.out.println(sb);
 	}
-	public static void dfs( int cnt) {
-		if(cnt==m) {
+	public static void dfs(int N , int M, int cnt) {
+		if(cnt==M) {
 			for (int i : res) {
 				sb.append(i+" ");
 			}
 			sb.append('\n');
 			return;
 		}
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < N; i++) {
 			check[i] = true;
 			res[cnt] = arr[i];
-			dfs(cnt+1);
+			dfs(N, M, cnt+1);
 			check[i] = false;
 		}
 	}
