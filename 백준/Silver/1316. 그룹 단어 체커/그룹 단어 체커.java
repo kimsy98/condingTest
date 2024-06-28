@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 
@@ -11,23 +12,27 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
 		int n = Integer.parseInt(br.readLine());
-		int cnt = n;
+		int cnt = 0;
+		boolean check;
 		for (int i = 0; i < n; i++) {
+			check = true;
 			String word = br.readLine();
-			outerLoop:
-			for (int j = 0; j < word.length()-1; j++) {
-				if(word.charAt(j)!=word.charAt(j+1)) {
-					for(int k =j+1; k<word.length();k++) {
-						if(j+1==k) continue;
-						if(word.charAt(j)==word.charAt(k)) {
-							cnt--;
-//							System.out.println(word);
-//							System.out.println(j+","+k);
-							break outerLoop;
-						}
+			Stack<Character> st = new Stack<>();
+			
+			for (int j = 0; j < word.length(); j++) {
+				char c = word.charAt(j);
+				if(!st.contains(c)){
+					st.add(c);
+				}else {
+					if(st.peek()==c) continue;
+					else {
+						check=false;
+						break;
 					}
 				}
 			}
+			if(check==true) cnt++;
+			
 		}
 		System.out.println(cnt);
 	}
