@@ -19,6 +19,7 @@ public class Main {
 			t[sc.nextInt()] = true;
 		}
 		int party[][] = new int[m][];
+		
 		for (int i = 0; i < m; i++) {
 			int num = sc.nextInt();
 			party[i] = new int[num];
@@ -28,6 +29,7 @@ public class Main {
 				adj[party[i][j-1]][party[i][j]] = adj[party[i][j]][party[i][j-1]] = true;
 			}
 		}
+		
 		for (int i = 1; i <= n; i++) {
 			if(t[i])
 				dfs(i);
