@@ -8,8 +8,8 @@ public class Main {
 	static int n,m;
 	static int[] parent;
 	static int[] ans;
+    
 	public static void main(String[] args)throws IOException {
-		// TODO Auto-generated method stub
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
@@ -26,8 +26,7 @@ public class Main {
 			st = new StringTokenizer(br.readLine());
 			for(int j =1; j<n+1;j++) {
 				int v = Integer.parseInt(st.nextToken());
-				
-//				if(i==j) continue;
+			
 				if(v==1) {
 					union(i,j);
 
@@ -51,9 +50,9 @@ public class Main {
 		for(int i=1;i<m+1;i++) {
 			if(ans[0]==ans[i])cnt++;
 		}
-		if(cnt == m) {
-			System.out.println("YES");
-		}else System.out.println("NO");
+		if(cnt != m) {
+			System.out.println("NO");
+		}else System.out.println("YES");
 		
 	}
 	
