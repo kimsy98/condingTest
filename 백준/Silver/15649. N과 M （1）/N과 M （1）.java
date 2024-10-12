@@ -1,46 +1,46 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
+
 	static int n,m;
+	static boolean[] visit;
 	static int[] arr;
 	static int[] res;
-	static boolean[] check;
-	
+	static StringBuilder sb = new StringBuilder();
 	public static void main(String[] args) {
+
 		
 		Scanner sc = new Scanner(System.in);
+		
 		n = sc.nextInt();
 		m = sc.nextInt();
-		
-		arr = new int[n];
+		arr = new int[n+1];
+		visit = new boolean[n+1];
 		res = new int[m];
-		check = new boolean[n];
 		
-		for (int i = 1; i <= n; i++) {
-			arr[i-1] =i; 
+		for (int i = 0; i <=n; i++) {
+			arr[i] = i;
 		}
 		
-		permutaion(0);
+		permu(0);
+		System.out.println(sb);
 	}
-	public static void permutaion(int cnt) {
-		if(cnt==m) {
-			for (int i = 0; i < m; i++) {
-				System.out.print(res[i]+" ");
+	static void permu(int depth) {
+		if(depth==m) {
+
+			for (int i = 0; i <m; i++) {
+					sb.append(res[i]+ " ");
 			}
-			System.out.println();
+			sb.append("\n");
 			return;
 		}
 		
-		for(int i =0; i<n;i++) {
-			
-			if(!check[i]) {
-				check[i]=true;
-				res[cnt] = arr[i];
-				permutaion(cnt+1);
-				check[i]=false;
-				
-			}
+		for (int i = 1; i <=n; i++) {
+			if(visit[i])continue;
+			visit[i] = true;
+			res[depth] = arr[i];
+			permu(depth+1);
+			visit[i] = false;
 		}
 	}
 
