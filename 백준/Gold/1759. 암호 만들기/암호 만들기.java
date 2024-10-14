@@ -1,67 +1,67 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
-	/*
-	 * 
-	 * 
-	 * 조건 a e i o u 중 최소 하나 꼭 사용 최소 두 개의 자음으로 구성 알파벳 암호에서 증가하는 순서로 배열
-	 * 
-	 */
-	static int l, c;
-	static String[] list;
-	static String[] res;
+	
+	static int l,c;
+	static char[] arr;
+	static char[] res;
+	static char[] check = {'a','e','i','o','u'};
 	static StringBuilder sb = new StringBuilder();
-	public static void main(String[] args) {
-
-		Scanner sc = new Scanner(System.in);
-
-		l = sc.nextInt();
-		c = sc.nextInt();
-
-		list = new String[c];
-		res = new String[l];
+	
+	public static void main(String[] args) throws IOException{
 		
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		
+		l = Integer.parseInt(st.nextToken());
+		c = Integer.parseInt(st.nextToken());
+		
+		arr = new char[c];
+		res = new char[l];
+		st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < c; i++) {
-			list[i] = sc.next();
+			String ch = st.nextToken();
+			arr[i] = ch.charAt(0);
 		}
-		Arrays.sort(list);
-//		System.out.println(Arrays.toString(list));
 		
-		combi(0,0);
+		Arrays.sort(arr);
+		
+
+		permu(0,0);
 		System.out.println(sb);
 	}
-
-	private static void combi(int cnt, int start) {
-		if(cnt == l) {
-			int check=0;
-			int cs = l;//자음 개수 적어도 2개 이상
-			for (int i = 0; i < res.length; i++) {
-				if(res[i].equals("e")||res[i].equals("a")||res[i].equals("i")||res[i].equals("o")
-						||res[i].equals("u")) {
-					check++;
-					cs--;
-				}
-			}
-			if(cs>=2&&check>=1) {
-				
+	static void permu(int dep,int st) {
+		
+		if(dep==l) {
+			
+			int vow = 0;
+			int notVow=0;
+			for (int i = 0; i < 5; i++) {
 				for (int j = 0; j < res.length; j++) {
-					sb.append(res[j]);
-					
+					if(check[i]==res[j])vow++;
 				}
-				sb.append('\n');
-				
 			}
-//			System.out.println(Arrays.toString(res));
+			
+			notVow = res.length-vow;
+			if(vow>=1&&2<=notVow) {
+				for(char ch:res) {
+					sb.append(ch);
+				}
+				sb.append("\n");	
+			}
+				
 			return;
 		}
 		
-		
-		for (int i = start; i < c; i++) {
-		
-			res[cnt] = list[i];
-			combi(cnt+1,i+1);
+		for (int i = st; i < c; i++) {
+			res[dep] = arr[i];
+			permu(dep+1, i+1);
 		}
 	}
 
