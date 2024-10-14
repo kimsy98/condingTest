@@ -1,52 +1,48 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.util.Scanner;
 
 public class Main {
 
 	static int n,m;
 	static int[] arr;
+	static boolean[] visit;
 	static int[] res;
-	static boolean[] check;
 	static StringBuilder sb = new StringBuilder();
-	public static void main(String[] args) throws IOException{
+	
+	public static void main(String[] args) {
+
+		Scanner sc = new Scanner(System.in);
 		
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st  =new StringTokenizer(br.readLine());
+		n = sc.nextInt();
+		m = sc.nextInt();
 		
-		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
-		
+		visit = new boolean[n];
 		arr = new int[n];
-		check = new boolean[n];
 		res = new int[m];
 		
-		st = new StringTokenizer(br.readLine());
-		for (int i = 0; i < n; i++) {
-			arr[i] = Integer.parseInt(st.nextToken());
+		
+		for(int i =0 ; i<n;i++) {
+			arr[i] = sc.nextInt();
 		}
-		
 		Arrays.sort(arr);
-		
-		dfs(0);
+		permu(0);
 		System.out.println(sb);
 	}
-	public static void dfs(int cnt) {
-		if(cnt==m) {
-			for (int i : res) {
-				sb.append(i+" ");
+	static void permu(int dep) {
+		if(dep==m) {
+			for(int num : res) {
+				sb.append(num).append(" ");
 			}
-			sb.append('\n');
+			sb.append("\n");
 			return;
 		}
-		for (int i = 0; i < n; i++) {
-			if(check[i])continue;
-			check[i] = true;
-			res[cnt] = arr[i];
-			dfs(cnt+1);
-			check[i] = false;
+		
+		for(int i =0; i<n; i++) {
+			if(visit[i])continue;
+			visit[i] = true;
+			res[dep] = arr[i];
+			permu(dep+1);
+			visit[i] = false;
 		}
 	}
 
