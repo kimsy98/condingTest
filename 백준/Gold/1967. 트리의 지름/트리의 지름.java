@@ -18,6 +18,8 @@ public class Main {
 			this.weight = weight;
 		}
 	}
+	static int s;
+	
 	public static void main(String[] args) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		n = Integer.parseInt(br.readLine());
@@ -34,24 +36,31 @@ public class Main {
 			li[start].add(new Node(end,w));
 			li[end].add(new Node(start, w));
 		}
-		for(int i =1; i<=n; i++) {
 			vis = new boolean[n+1]; 
-			vis[i] = true;
-			dfs(i,0);
-		}
-		System.out.println(max);
+			vis[1] = true;
+			dfs(1,0);
+			vis = new boolean[n+1]; 
+			vis[s] = true;
+			dfs(s,0);
+			System.out.println(max);
 		
 		
 		
 	}
 	static void dfs(int num, int weight) {
-        for(Node node : li[num]){
+		
+        if(max<weight) {
+        	max = weight;
+        	s = num;
+        }
+		for(Node node : li[num]){
             if(!vis[node.e]){
                 vis[node.e] = true;
-                dfs(node.e, weight + node.weight);
+                dfs(node.e, node.weight+weight);
             }
         }
-        max = Math.max(max,weight);
+
+
 	}
 
 }
