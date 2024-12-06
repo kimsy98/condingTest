@@ -9,7 +9,7 @@ import java.util.StringTokenizer;
 public class Main {
 	static int n;
 	static int k;
-	static List<Integer> coins;
+	static int[] coins;
 	static int[] kArr;
 	
 	public static void main(String[] args) throws IOException{
@@ -21,38 +21,23 @@ public class Main {
 		
 
 		kArr = new int[k+1];
-		coins = new ArrayList<>();
+		coins = new int[n];
 
 		for (int i = 0; i < n; i++) {
 			int coin = Integer.parseInt(br.readLine());
-			if(coin<=k) {
-				coins.add(coin);
+			coins[i] = coin;
+		}
+		Arrays.fill(kArr, 100000);
+		kArr[0] = 0;
+		
+		for(int i =0; i<n; i++) {
+			for(int j = coins[i]; j<=k; j++) {
+				kArr[j] = Math.min(kArr[j], kArr[j-coins[i]]+1);
 			}
 		}
-		Arrays.fill(kArr, 10001);
-		solution();
-		if(kArr[k]>=10001)kArr[k] = -1;
-		System.out.println(kArr[k]);
+		
+		System.out.println((kArr[k]==100000) ? -1 : kArr[k]);
 	}
-	static void solution() {
-		for(int i =1; i<=k; i++) {
-			int l =1;
-			int r = i-1;
-			
-			for(int coin : coins) {
-				if(i%coin==0) {
-					kArr[i] = Math.min(kArr[i], i/coin);
-				}
-			}
-			while(true) {
-				if(l>=r)break;
-				
-				kArr[i] = Math.min(kArr[i], kArr[l]+kArr[r]);
-				l++;
-				r--;
-			}
-			
-		}
-	}
+
 
 }
