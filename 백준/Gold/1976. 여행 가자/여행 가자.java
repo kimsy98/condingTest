@@ -6,67 +6,67 @@ import java.util.StringTokenizer;
 public class Main {
 
 	static int n,m;
+	static int[] plan;
 	static int[] parent;
-	static int[] ans;
-    
 	public static void main(String[] args)throws IOException {
+		// TODO Auto-generated method stub
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		n = Integer.parseInt(br.readLine());
 		m = Integer.parseInt(br.readLine());
-		
+		plan = new int[m];
 		parent = new int[n+1];
 		
 		for(int i=0; i<n+1;i++) {
 			parent[i] = i;
 		}
 		
-		for(int i=1; i<n+1;i++) {
+		for(int i =1; i<=n; i++) {
 			st = new StringTokenizer(br.readLine());
-			for(int j =1; j<n+1;j++) {
-				int v = Integer.parseInt(st.nextToken());
-			
-				if(v==1) {
-					union(i,j);
-
-				}
+			for (int j = 1; j <=n; j++) {
+				int val = Integer.parseInt(st.nextToken());
 				
+				if(val==1) {
+					union(i,j);
+				}
 			}
 		}
 		
+		
 		st = new StringTokenizer(br.readLine());
 		
-		ans = new int[m+1];
+		for(int i =0; i<m; i++) {
+			plan[i] = Integer.parseInt(st.nextToken());
+		}
 		
-		//m 계획 수 돌면서 확인
-		for(int i=1;i<m+1;i++) {
-			int x = Integer.parseInt(st.nextToken());
-			ans[i] = find(x);
-
+		
+		parent[0] = parent[plan[0]];
+		boolean check = true;
+		
+		for(int i =0; i<m;i++) 	{
+			if(parent[plan[i]]!=parent[0]){
+				check = false;
+				break;
+			}
 		}
-		int cnt = 0;
-		ans[0] = ans[1];
-		for(int i=1;i<m+1;i++) {
-			if(ans[0]==ans[i])cnt++;
-		}
-		if(cnt != m) {
-			System.out.println("NO");
-		}else System.out.println("YES");
+		System.out.println((check==true)? "YES": "NO");
 		
 	}
-	
 	static void union(int x, int y) {
+
 		x = find(x);
 		y = find(y);
 		
 		if(x<y) parent[y] = x;
 		else parent[x] = y;
+		
 	}
-	
-	static int find(int x) {
-		if(parent[x]==x) return x;
-		return parent[x] = find(parent[x]);
+	static int find(int idx) {
+		if(parent[idx]==idx) {
+			return idx;
+		}
+		return parent[idx] = find(parent[idx]);
 	}
 
 }
