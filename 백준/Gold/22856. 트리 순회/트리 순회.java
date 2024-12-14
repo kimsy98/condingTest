@@ -37,7 +37,7 @@ public class Main {
         inOrderStatus = new ArrayList<>(); // 중위 순회 경로 저장
         inOrder(1);
 
-        lastNode = inOrderStatus.get(N - 1); // 중위 순회의 마지막 노드
+        //lastNode = inOrderStatus.get(N - 1); // 중위 순회의 마지막 노드
 
         similarInOrderStatus = new ArrayList<>();  // 유사 중위 순회 경로 저장, 꼭 필요하진 않지만 과정을 확인하기 위해 추가
         visited = new boolean[N + 1];
@@ -83,7 +83,7 @@ public class Main {
             inOrder(left);
         }
 
-        inOrderStatus.add(cur);
+        lastNode = cur;
 
         if (right != -1) {
             inOrder(right);
