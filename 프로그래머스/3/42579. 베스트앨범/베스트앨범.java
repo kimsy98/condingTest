@@ -2,34 +2,39 @@ import java.util.*;
  
 class Solution {
     public int[] solution(String[] genres, int[] plays) {
-        
         List<Integer> answer = new ArrayList<>();
         
-        HashMap<String, Integer> totalCnt = new HashMap<>();
-        HashMap<String, HashMap<Integer, Integer>> music= new HashMap<>();
-        
-        for(int i =0 ; i<plays.length; i++){
-            totalCnt.put(genres[i], totalCnt.getOrDefault(genres[i], 0)+plays[i]);
-            
-            if(!music.containsKey(genres[i])){
-                HashMap<Integer, Integer> map = new HashMap<>();
-                map.put(i,plays[i]);
-                music.put(genres[i], map);
-            }else music.get(genres[i]).put(i, plays[i]);
-            
+        HashMap<String, HashMap<Integer, Integer>> map = new HashMap<>();
+        HashMap<String, Integer> topList = new HashMap<>();
+        for(String genre : genres){
+            map.put(genre, new HashMap<>());
         }
         
-        List<String> keySet = new ArrayList(totalCnt.keySet());
-        Collections.sort(keySet, (n1, n2)-> totalCnt.get(n2)-totalCnt.get(n1));
-        
-        for(String key : keySet){
-            List<Integer> genreKey = new ArrayList(music.get(key).keySet());
-            Collections.sort(genreKey, (n1, n2)-> music.get(key).get(n2)-music.get(key).get(n1));
+        for(int i =0; i<plays.length; i++){
+            String genre = genres[i];
+            int play = plays[i];
             
-            answer.add(genreKey.get(0));
-            if(genreKey.size()>1) answer.add(genreKey.get(1));
+            map.get(genre).put(i, play);
+            // System.out.println(map.get(genre));
         }
-        return answer.stream().mapToInt(i->i).toArray();
+        for(String gen : map.keySet()){
+            int totalPlay = 0;
+            for(int i : map.get(gen).keySet()){
+                totalPlay+= map.get(gen).get(i);
+            }
+            topList.put(gen, totalPlay);
+        }
+        List<String> keySet = new ArrayList<>(topList.keySet());
+        keySet.sort(((o1,o2)->topList.get(o2)-topList.get(o1)));
+
+        for(String gen :keySet){
+            List<Integer> playKeySet = new ArrayList<>(map.get(gen).keySet());
+            playKeySet.sort(((o1,o2)->map.get(gen).get(o2)-map.get(gen).get(o1)));
+            answer.add(playKeySet.get(0));
+            if(playKeySet.size()>1) answer.add(playKeySet.get(1));
+        } 
+        
+        return  answer.stream().mapToInt(i->i).toArray();
     }
         
         
