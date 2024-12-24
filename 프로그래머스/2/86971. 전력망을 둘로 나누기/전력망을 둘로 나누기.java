@@ -1,60 +1,29 @@
-import java.util.*;
-
-import static java.lang.Math.*;
 class Solution {
+    int N, min;
+    int[][] map;
+    int[] vst;
+    int dfs(int n){
+        vst[n] = 1;
+        int child = 1;
+        for(int i = 1; i <= N; i++) {
+            if(vst[i] == 0 && map[n][i] == 1) {
+                vst[i] = 1;
+                child += dfs(i);
+            }
+        }
+        min = Math.min(min, Math.abs(child - (N - child)));
+        return child;
+    }
     public int solution(int n, int[][] wires) {
-        int answer = Integer.MAX_VALUE;
-        int m = wires.length;
-        for(int i = 0; i < m; i++){
-            int[] parent = makeParentArr(n);
-            answer = min(answer, solve(parent, i, wires));
+        N = n;
+        min = n;
+        map = new int[n+1][n+1];
+        vst = new int[n+1];
+        for(int[] wire : wires) {
+            int a = wire[0], b = wire[1];
+            map[a][b] = map[b][a] = 1;
         }
-        return answer;
-    }
-
-    private int solve(int[] parent, int except, int[][] wires){
-        int n = wires.length;
-        for(int i = 0; i < n; i++){
-            if(i == except) continue;
-            int[] v = wires[i];
-            int a = v[0], b = v[1];
-            union(a, b, parent);
-        }
-        for(int i = 1; i < parent.length; i++){
-            find(i, parent);
-        }
-        Map<Integer, Integer> map = new HashMap<>();
-        for(int v : parent){
-            if(v == 0) continue;
-            map.put(v, map.getOrDefault(v, 0) + 1);
-        }
-        int[] tmp = new int[2];
-        int idx = 0;
-        for(int key : map.keySet()){
-            tmp[idx++] = map.get(key);
-        }
-        return abs(tmp[0] - tmp[1]);
-    }
-
-    private int find(int v, int[] parent){
-        if(parent[v] != v){
-            parent[v] = find(parent[v], parent);
-        }
-        return parent[v];
-    }
-
-    private void union(int a, int b, int[] parent){
-        int aParent = find(a, parent);
-        int bParent = find(b, parent);
-
-        parent[bParent] = aParent;
-    }
-
-    private int[] makeParentArr(int n){
-        int[] ret = new int[n+1];
-        for(int i = 0; i <= n; i++){
-            ret[i] = i;
-        }
-        return ret;
+        dfs(1);
+        return min;
     }
 }
