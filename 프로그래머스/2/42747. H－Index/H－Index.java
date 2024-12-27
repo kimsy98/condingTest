@@ -3,9 +3,8 @@ class Solution {
     public int solution(int[] citations) {
         int answer = 0;
         Arrays.sort(citations);
-        for(int i =0; i<citations.length; i++){
+        for(int i =0; i<citations.length;i++){
             if(citations[i]>=citations.length-i){
-                // System.out.println(i+" "+ citations[i]);
                 answer = citations.length-i;
                 break;
             }
