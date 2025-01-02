@@ -7,14 +7,12 @@ class Solution {
         for(int work : works){
             pq.add(work);
         }
-        while(n>0){
+        while(n>0&&!pq.isEmpty()){
             if(!pq.isEmpty()){
                 int work = pq.poll();
                 n--;
                 work--;
                 if(work>0)pq.add(work);
-            }else{
-                break;
             }
         }
         while(!pq.isEmpty()){
