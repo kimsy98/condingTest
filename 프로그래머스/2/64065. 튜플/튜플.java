@@ -1,6 +1,8 @@
 import java.util.*;
 class Solution {
     public int[] solution(String s) {
+                // String[] arr = s.replaceAll("[{]", " ").replaceAll("[}]", " ").trim().split(" , ");
+        // System.out.println(Arrays.toString(arr));
         s = s.substring(2,s.length()-2).replace("},{", "/");
         
         String[] sArr = s.split("/");
