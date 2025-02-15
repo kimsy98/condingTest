@@ -1,18 +1,19 @@
-import java.util.Stack;
+import java.util.*;
 
 public class Solution {
-    public int[] solution(int[] arr) {
-        // 스택 생성
-        Stack<Integer> stack = new Stack<>();
-
-        // arr 순회
-        for (int i : arr) {
-            if (stack.empty() || !stack.peek().equals(i)) {
-                stack.push(i);
-            }
+    public int[] solution(int []arr) {
+        int[] answer;
+        Deque<Integer> dq = new LinkedList<>();
+        for(int num : arr){
+            if(dq.isEmpty()||dq.peekLast()!=num) dq.add(num);
         }
+        answer = new int[dq.size()];
+        
+        for(int i =0; i<answer.length; i++){
+            answer[i] = dq.poll();
+        }
+        
 
-        // stack to array
-        return stack.stream().mapToInt(i -> i).toArray();
+        return answer;
     }
 }
