@@ -1,36 +1,60 @@
-class Solution {
-    public int solution(int n, int[][] results) {
-        int[][] graph = new int[n + 1][n + 1];
-        
-		for (int[] edge : results) {
-			graph[edge[0]][edge[1]] = 1;
-			graph[edge[1]][edge[0]] = - 1;
-		}
-        
-        for(int i =1; i<= n;i++){
-            for(int j =1; j <= n;j++){
-                for(int k =1; k <= n;k++){
-                    if(graph[i][k]==1&&graph[k][j]==1){
-                        graph[i][j]=1;
-                        graph[j][i]=-1;
-                    }
-                    if(graph[i][k]==-1 && graph[k][j]==-1){
-                        graph[i][j]=-1;
-                        graph[j][i]=1;
-                    }
-                    
-                }
-            }   
-        }
-        int answer = 0;
+import java.util.*;
 
-        for(int i = 0;i<= n;i++){
-            int cnt = 0;
-            for(int j = 0 ; j <=n;j++){
-                if(graph[i][j]!=0)cnt++;
-            }
-            if(cnt==n-1)answer++;
+class Solution {
+    List<List<Integer>> wins = new ArrayList<>();
+    List<List<Integer>> loses = new ArrayList<>();
+    
+    public int solution(int n, int[][] results) {
+        int answer = 0;
+        
+        for(int i = 0; i <= n; i++) {
+            wins.add(new ArrayList<>());
+            loses.add(new ArrayList<>());
         }
+        
+        for(int[] result: results) {
+            int win = result[0];
+            int lose = result[1];
+            wins.get(win).add(lose);
+            loses.get(lose).add(win);
+        }
+        
+        for(int i = 1; i <= n; i++) {
+            boolean[] visited = new boolean[n + 1];
+            Queue<Integer> q = new LinkedList<>();
+            
+            visited[i] = true;
+            q.add(i);
+            while(!q.isEmpty()) {
+                int win = q.poll();
+                for(int lose: wins.get(win)) {
+                    if (visited[lose]) continue;
+                    visited[lose] = true;
+                    q.add(lose);
+                }
+            }
+            
+            q.add(i);
+            while(!q.isEmpty()) {
+                int lose = q.poll();
+                for(int win: loses.get(lose)) {
+                    if (visited[win]) continue;
+                    visited[win] = true;
+                    q.add(win);
+                }
+            }
+            
+            boolean flag = true;
+            for(int j = 1; j <= n; j++) {
+                if(!visited[j]) {
+                    flag = false;
+                }
+            }
+            if (flag) {
+                answer++;
+            }
+        }
+        
         return answer;
     }
 }
