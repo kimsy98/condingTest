@@ -1,60 +1,55 @@
 import java.util.*;
-
 class Solution {
-
-    static List<Integer>[] arr;
     static int answer = 0;
-
+    static int depth = 0;
     public int solution(int n, int[][] edge) {
-        arr = new ArrayList[n+1];
-        
-        for(int i =0; i<=n;i++){
+        List<Integer>[] arr = new List[n];
+        for(int i =0; i<n; i++){
             arr[i] = new ArrayList<>();
         }
         
-        for(int i =0; i<edge.length; i++){
-            int start = edge[i][0];
-            int end = edge[i][1];
-            
-            arr[start].add(end);
-            arr[end].add(start);
+        for(int[] e : edge){
+            arr[e[0]-1].add(e[1]-1);
+            arr[e[1]-1].add(e[0]-1);
         }
         
-        bfs(n);
+        bfs(n,edge, arr);
+        
         
         return answer;
     }
-    void bfs(int n){
+    static int cnt = 0;
+    static void bfs(int n, int[][] edge, List<Integer>[] arr){
+        boolean[] visit = new boolean[n];
         Queue<Node> q = new LinkedList<>();
-        boolean[] visit = new boolean[n+1];
-        visit[1] = true;
-        q.add(new Node(1,0));
-        int max = 0;
+        q.add(new Node(0,1));
+        visit[0] = true;
         while(!q.isEmpty()){
             Node node = q.poll();
-            int v = node.v;
-            int l = node.length;
-            if(max==l){
-                answer++;
-            }else{
-                answer = 1;
-                max++;
+            int st = node.a;
+            int dep = node.dep;
+            if(dep> depth){
+                depth = dep;
+                cnt=0;
             }
-            for(int i =0; i<arr[v].size();i++){
-                int end = arr[v].get(i);
-                if(visit[end])continue;
-                visit[end] = true;
-                q.add(new Node(end, l+1));
+            cnt++;
+            for(int i =0; i<arr[st].size(); i++){
+                if(visit[arr[st].get(i)])continue;
+                visit[arr[st].get(i)] = true;
+                q.add(new Node(arr[st].get(i), dep+1));
             }
+
+
+        }
+        answer = cnt;
+
+    }
+    static class Node{
+        int a;
+        int dep;
+         Node(int a, int dep){
+            this.a = a;
+            this.dep = dep;
         }
     }
-    public static class Node{
-        int length;
-        int v;
-        Node(int v, int length){
-            this.v = v;
-            this.length = length;
-        }
-    }
-    
 }
