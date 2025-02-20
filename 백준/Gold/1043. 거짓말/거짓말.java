@@ -1,57 +1,81 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.stream.IntStream;
 
 public class Main {
-	
 	static int n,m;
-	static int len;
-	static boolean[][] adj;
-	static boolean[] t;
-	public static void main(String[] args) {
+	static int[] set;
+	static int T;
+	public static void main(String[] args) throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 		
-		Scanner sc  = new Scanner(System.in);
-		n = sc.nextInt();
-		m = sc.nextInt();
-		len = sc.nextInt();
-		t = new boolean[n+1];
-		adj = new boolean[n+1][n+1];
+		n = Integer.parseInt(st.nextToken());
+		m = Integer.parseInt(st.nextToken());
+		set = IntStream.range(0, n+1).toArray();
 		
-		for (int i = 0; i < len; i++) {
-			t[sc.nextInt()] = true;
-		}
-		int party[][] = new int[m][];
+		st = new StringTokenizer(br.readLine());
 		
-		for (int i = 0; i < m; i++) {
-			int num = sc.nextInt();
-			party[i] = new int[num];
-			party[i][0] =sc.nextInt();
-			for (int j = 1; j < num; j++) {
-				party[i][j] = sc.nextInt();
-				adj[party[i][j-1]][party[i][j]] = adj[party[i][j]][party[i][j-1]] = true;
+		T = Integer.parseInt(st.nextToken());
+		if(T!=0) {
+			while(st.hasMoreTokens()) {
+				int i = Integer.parseInt(st.nextToken());
+				set[i] = 0;
 			}
 		}
+		int MemberCnt = 0;
+		List<Integer>[] party = new ArrayList[m];
+		for(int i =0; i< m ; i++) party[i] = new ArrayList<>();
+		List<Integer>[] memberSet = new ArrayList[n+1];
+		for(int i =0; i<=n ; i++) memberSet[i] = new ArrayList<>();
 		
-		for (int i = 1; i <= n; i++) {
-			if(t[i])
-				dfs(i);
-		}
 		
-		int cnt = 0;
-		for (int i = 0; i <m; i++) {
-			if(!t[party[i][0]])
-				cnt++;
-		}
-		System.out.println(cnt);
-		
-	}
-	static void dfs(int s) {
-		
-		for (int i = 1; i <=n; i++) {
-			if(adj[s][i]&&!t[i]) {
-				t[i] = true;
-				dfs(i);
+		for(int i =0; i<m;i++) {
+			st = new StringTokenizer(br.readLine());
+			MemberCnt = Integer.parseInt(st.nextToken());
+			boolean check = false;
+			for(int j =0; j<MemberCnt ; j++) {
+				int member = Integer.parseInt(st.nextToken());
+				party[i].add(member);
 			}
-		}
-		
-	}
+			for(int k = 0; k<MemberCnt;k++) {
+				for(int l = 0; l<MemberCnt;l++) {
+					if(k==l)continue;
+					memberSet[party[i].get(k)].add(party[i].get(l));
+				}
+			}
 
+		}
+		
+		for(int i =1; i<=n;i++) {
+			if(set[i]==0) dfs(i,memberSet);
+		}
+		
+		
+		int answer =0 ;
+		for(List<Integer> li : party) {
+			boolean check = false;
+			for(int num : li) {
+				if(set[num]==0) check = true;
+			}
+			if(!check)answer++;
+		}
+		System.out.println(answer);
+//		System.out.println(Arrays.deepToString(party));
+//		System.out.println(Arrays.deepToString(memberSet));
+//		System.out.println(Arrays.toString(set));
+	}
+	private static void dfs(int start, List<Integer>[] memberSet) {
+		
+		for(int i =0; i<memberSet[start].size();i++) {
+			if(set[memberSet[start].get(i)]== 0)continue;
+			set[memberSet[start].get(i)]= 0;
+			dfs(memberSet[start].get(i), memberSet);
+		}
+	}
 }
