@@ -1,49 +1,40 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
-
+import java.util.*;
+import java.io.*;
 public class Main {
-
-	static int node, vertex;
-	static int[][] gragh;
-	static boolean[] visited;
-	static int cnt=0;
-	public static void main(String[] args) throws NumberFormatException, IOException {
-
+	static int n, pair;
+	static int[][] arr;
+	static boolean[] visit;
+	static int answer =0;
+	public static void main(String[] args) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-		node = Integer.parseInt(br.readLine());
-		vertex = Integer.parseInt(br.readLine());
-
-		gragh = new int[node + 1][node + 1];
-		visited = new boolean[node + 1];
-
-		for (int i =0; i < vertex; i++) {
-			StringTokenizer str = new StringTokenizer(br.readLine());
-
-			int a = Integer.parseInt(str.nextToken());
-			int b = Integer.parseInt(str.nextToken());
-
-			gragh[a][b] = gragh[b][a] = 1;
-
+		StringTokenizer st;
+		n = Integer.parseInt(br.readLine());
+		pair = Integer.parseInt(br.readLine());
+		
+		visit = new boolean[n+1];
+		arr = new int[n+1][n+1];
+		
+		for(int i =0; i < pair; i++) {
+			st = new StringTokenizer(br.readLine());
+			int start = Integer.parseInt(st.nextToken());
+			int end = Integer.parseInt(st.nextToken());
+			
+			arr[start][end] = 1;
+			arr[end][start] = 1;
 		}
-		visited[1]=true;
+		visit[1]  = true;
 		dfs(1);
-		System.out.println(cnt);
-
+		System.out.println(answer);
 	}
-	private static void dfs(int startNode) {
+	static void dfs(int start) {
 		
-		if(!visited[startNode]) {
-			visited[startNode]=true;
-			cnt++;
+		for(int i =1; i<arr[start].length; i++) {
+			if(visit[i])continue;
+			if(arr[start][i]==0) continue;
+			visit[i] = true;
+			answer++;
+			dfs(i);
 		}
-		
-		for (int i = 1; i <= node; i++) {
-			if(gragh[startNode][i]==1&&!visited[i])dfs(i);//방문 안한곳 조건 넣기
-		}
-		
 	}
 
 }
