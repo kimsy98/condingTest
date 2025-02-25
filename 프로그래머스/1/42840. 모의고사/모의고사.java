@@ -1,3 +1,4 @@
+import java.util.*;
 class Solution {
     public int[] solution(int[] answers) {
         int[] ott = new int[3];
@@ -15,18 +16,11 @@ class Solution {
             
         }
         int max = Math.max(ott[0],Math.max(ott[1], ott[2]));
-        int cnt = 0;
-        for(int num : ott){
-            if(max == num)cnt++;
+        List<Integer> answer = new ArrayList<>();
+        for(int i =0; i< ott.length; i++){
+            if(max==ott[i]) answer.add(i+1);
         }
-        int[] answer = new int[cnt];
-        cnt = 0;
-        for(int i = 0; i<3; i++){
-            if(max == ott[i]) {
-                answer[cnt] = i+1;
-                cnt++;
-            }
-        }
-        return answer;
+        
+        return answer.stream().mapToInt(i->i.intValue()).toArray();
     }
 }
