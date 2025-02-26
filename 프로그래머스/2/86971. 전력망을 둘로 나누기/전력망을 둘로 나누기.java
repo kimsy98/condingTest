@@ -30,8 +30,8 @@ class Solution {
                 // vis = new boolean[n+1];
                 int Grid2 = dfs(n, copy, 1);
                 
-                System.out.println("dfs Cnt : "+Grid1 +" "+ Grid2);
-                System.out.println("list "+ wireList[i]+ " // "+wireList[copy]);
+                // System.out.println("dfs Cnt : "+Grid1 +" "+ Grid2);
+                // System.out.println("list "+ wireList[i]+ " // "+wireList[copy]);
                 answer = Math.min(answer, Math.abs(Grid1-Grid2));
                 // wireList[i].add(copy);
                 // wireList[copy].add(i);
