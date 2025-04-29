@@ -6,19 +6,18 @@ class Solution {
         for(int scov : scoville){
             pq.add(scov);
         }
-        int min = pq.peek().intValue();
-        // System.out.println(min);
+        Integer min = pq.peek().intValue();
+       
         while(min<K){
             if(pq.size()>=2){
                 answer++;
                 int num = pq.poll()+(pq.poll()*2);
                 pq.add(num);
-                min = pq.peek();
+                if(pq.peek()>=K)break;
             }else{
                 return -1;               
             }
         }
-        
         return answer;
     }
 }
