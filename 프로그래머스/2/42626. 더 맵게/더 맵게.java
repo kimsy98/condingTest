@@ -8,16 +8,14 @@ class Solution {
         }
         Integer min = pq.peek().intValue();
        
-        while(min<K){
-            if(pq.size()>=2){
+        while(pq.size() > 1 && pq.peek() < K){
+
                 answer++;
                 int num = pq.poll()+(pq.poll()*2);
-                pq.add(num);
-                if(pq.peek()>=K)break;
-            }else{
-                return -1;               
-            }
+                pq.add(num);            
         }
+        if(pq.size() <= 1 && pq.peek() < K)answer = -1;
+
         return answer;
     }
 }
