@@ -1,41 +1,37 @@
 class Solution {
-
-    int[] gInfo;
-    int[][] gEdges;
-    int maxSheepCnt = 0;
-
+    static int answer = 0;
     public int solution(int[] info, int[][] edges) {
-        gInfo = info;
-        gEdges = edges;
-        boolean[] initVisited = new boolean[info.length];
-        dfs(0, initVisited, 0, 0);
-
-        return maxSheepCnt;
+        boolean[] vis = new boolean[info.length];
+        dfs(info, edges, 0, 0,0, vis);
+        
+        return answer;
     }
-
-    public void dfs(int idx, boolean[] visited, int sheepCnt, int wolfCnt) {
-        visited[idx] = true;
-        if (gInfo[idx] == 0) {
+    public void dfs(int[] info, int[][] edges, int idx,int sheepCnt, int wolfCnt, boolean[] vis){
+        vis[idx] = true;
+        if(info[idx]==0){
             sheepCnt++;
-            if (sheepCnt > maxSheepCnt) {
-                maxSheepCnt = sheepCnt;
+            answer = Math.max(answer, sheepCnt);
+        }else{
+            if(sheepCnt <=wolfCnt+1){
+                return;
             }
-        } else {
             wolfCnt++;
         }
-
-        if (sheepCnt <= wolfCnt) {
-            return;
-        }
-
-        for (int[] edge : gEdges) {
-            if (visited[edge[0]] && !visited[edge[1]]) {
-            	boolean[] nextVisited = new boolean[visited.length];
-            	for (int i = 0; i < visited.length; i++) {
-                	nextVisited[i] = visited[i];
-            	}
-                dfs(edge[1], nextVisited, sheepCnt, wolfCnt);
+        
+        for(int i =0; i<edges.length;i++){
+            int[] edge = edges[i];
+            int start = edge[0];
+            int end = edge[1];
+            if(vis[start]&&!vis[end]){
+                boolean[] visitArr = new boolean[info.length];
+                for(int j =0; j< vis.length; j++){
+                    visitArr[j] = vis[j];
+                }
+                dfs(info, edges, end, sheepCnt, wolfCnt, visitArr);
             }
+            
+            
         }
+        
     }
 }
