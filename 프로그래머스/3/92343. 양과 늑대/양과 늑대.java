@@ -1,34 +1,37 @@
 import java.util.*;
+
 class Solution {
-    int answer = 0;
-    List<Integer>[] edg;
-    public int solution(int[] info, int[][] edges) {
-        edg = new List[info.length];
-        for(int i =0; i<edges.length; i++){
-            edg[i] = new ArrayList<>();
+
+    int solution(int[] info, int[][] edges) {
+
+        int n = info.length, cnt = 0;
+        List<Integer> adj[] = new ArrayList[n];
+
+        for(int i=0; i<n; i++)
+            adj[i] = new ArrayList<>();
+
+        for(int e[] : edges) {
+            adj[e[0]].add(e[1]);
+            adj[e[1]].add(e[0]);
         }
-        int remainSheep = Collections.frequency(Arrays.asList(info), 0);
-        bfs(1,0,0,remainSheep, info,edges);
-        return answer;
-    }
-    public void bfs(int sheep,int wolf,int root,int remainSheep, int[] info, int[][] edges){
-        Queue<int[]> q = LinkedList<>();
-        //sheep,wolf, index
-        q.add(new int[] {1,0, root});
-        info[0] = 0;
-        while(!q.isEmpty()){
-            int[] status = q.poll();
-            int shCnt = status[0];
-            int woCnt = status[1];
-            int idx = status[2];
-            for(int i =0; i<edges[idx].size(); i++){
-                int nextIdx = edges[idx].get(i);
-                if(nextIdx==0){
-                    while(true){
-                        edges[nextIdx]
+        Queue<int[]> q = new LinkedList<>();
+        q.add(new int[] {1, 0, 1});
+        while(!q.isEmpty()) {
+            int[] cur = q.poll();
+            cnt = Math.max(cnt, cur[0]);
+            for(int i=0, bit=1; i<n && bit<=cur[2]; bit=1<<++i) {
+                if((cur[2]&bit) > 0) {
+                    for(int j : adj[i]) {
+                        if((cur[2]&1<<j) > 0 || info[j] == 1 && cur[0]-cur[1] == 1) continue;
+                        int next[] = new int[3];
+                        next[0] = info[j] == 0 ? cur[0]+1 : cur[0];
+                        next[1] = info[j] == 1 ? cur[1]+1 : cur[1];
+                        next[2] = cur[2]^1<<j;
+                        q.add(next);
                     }
                 }
             }
         }
+        return cnt;
     }
 }
