@@ -17,8 +17,10 @@ class Solution {
             li.add(plan);
         }
         for(int i=0; i<vis.length;i++){
+            
             if(!vis[i]&&now.equals(tickets[i][0])){
                 vis[i] =true;
+                
                 dfs(dep+1,plan+" "+tickets[i][1], tickets[i][1], tickets);
                 vis[i] = false;
             }
