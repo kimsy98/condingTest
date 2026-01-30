@@ -1,36 +1,26 @@
 import java.util.*;
+import java.io.*;
 class Solution {
-    static boolean[] vis;
-    static int answer = 0;
+    boolean[] visit;
     public int solution(int n, int[][] computers) {
-        List<Integer>[] li = new ArrayList[n];
-        vis = new boolean[n];
-        for(int i =0; i<li.length; i++){
-            li[i] = new ArrayList<>();
-        }
-        
-        for(int i =0; i<n; i++){
-            for(int j =0; j<n; j++){
-                if(i==j) continue;
-                if(computers[i][j]==1)li[i].add(j);
-            }
-        }
-        
-        for(int i =0; i<n; i++){
-            if(!vis[i]){
-                vis[i] = true;
-                dfs(li, i);
-                answer++;
-            }
+        int answer = 0;
+        visit = new boolean[n];
+        for(int i = 0; i<n;i++){
+            if(visit[i])continue;
+            visit[i] = true;
+            dfs(i,computers,0, n);
+            answer++;
         }
 
         return answer;
     }
-    static void dfs(List<Integer>[] li, int idx){
-        for(int i =0; i<li[idx].size(); i++){
-            if(vis[li[idx].get(i)])continue;
-            vis[li[idx].get(i)] = true;
-            dfs(li, li[idx].get(i));
+    public void dfs(int st , int[][] computers, int dep, int n){
+        // if(dep==n)break;
+        for(int i=0; i<n;i++){
+            if(st==i||computers[st][i]==0)continue;
+            if(visit[i])continue;
+            visit[i] = true;
+            dfs(i, computers, dep, n);
         }
     }
 }
