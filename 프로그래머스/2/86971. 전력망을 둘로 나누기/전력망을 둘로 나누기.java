@@ -1,60 +1,30 @@
-import java.util.*;
-
-import static java.lang.Math.*;
+// import java.util.*;
 class Solution {
+    boolean[] vis;
+    int[][] net;
+    int N;
+    int answer = Integer.MAX_VALUE;
+    
     public int solution(int n, int[][] wires) {
-        int answer = Integer.MAX_VALUE;
-        int m = wires.length;
-        for(int i = 0; i < m; i++){
-            int[] parent = makeParentArr(n);
-            answer = min(answer, solve(parent, i, wires));
+        N = n;
+        vis = new boolean[n];
+        net = new int[n][n];
+        for(int[] wire : wires){
+            net[wire[0]-1][wire[1]-1] = 1;
+            net[wire[1]-1][wire[0]-1] = 1;
         }
+        dfs(1);
         return answer;
     }
-
-    private int solve(int[] parent, int except, int[][] wires){
-        int n = wires.length;
-        for(int i = 0; i < n; i++){
-            if(i == except) continue;
-            int[] v = wires[i];
-            int a = v[0], b = v[1];
-            union(a, b, parent);
+    public int dfs(int i){
+        vis[i] = true;
+        int child = 1;
+        for(int j = 0; j<N; j++){
+            if(net[i][j]==1&&!vis[j]){
+                child += dfs(j);
+            }
         }
-        for(int i = 1; i < parent.length; i++){
-            find(i, parent);
-        }
-        Map<Integer, Integer> map = new HashMap<>();
-        for(int v : parent){
-            if(v == 0) continue;
-            map.put(v, map.getOrDefault(v, 0) + 1);
-        }
-        int[] tmp = new int[2];
-        int idx = 0;
-        for(int key : map.keySet()){
-            tmp[idx++] = map.get(key);
-        }
-        return abs(tmp[0] - tmp[1]);
-    }
-
-    private int find(int v, int[] parent){
-        if(parent[v] != v){
-            parent[v] = find(parent[v], parent);
-        }
-        return parent[v];
-    }
-
-    private void union(int a, int b, int[] parent){
-        int aParent = find(a, parent);
-        int bParent = find(b, parent);
-
-        parent[bParent] = aParent;
-    }
-
-    private int[] makeParentArr(int n){
-        int[] ret = new int[n+1];
-        for(int i = 0; i <= n; i++){
-            ret[i] = i;
-        }
-        return ret;
+        answer = Math.min(answer, Math.abs(N-2*child));
+        return child;
     }
 }
