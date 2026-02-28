@@ -6,16 +6,13 @@ class Solution {
         for(int scov : scoville){
             pq.add(scov);
         }
-        Integer min = pq.peek().intValue();
-       
-        while(pq.size() > 1 && pq.peek() < K){
-
-                answer++;
-                int num = pq.poll()+(pq.poll()*2);
-                pq.add(num);            
+        if(pq.peek()>=K)return 0;
+        while(pq.peek()<K&&pq.size()>1){
+            answer++;
+            int mix = pq.poll()+pq.poll()*2;
+            pq.add(mix);
         }
-        if(pq.size() <= 1 && pq.peek() < K)answer = -1;
-
+        if(pq.peek()<K)return -1;
         return answer;
     }
 }
