@@ -1,30 +1,35 @@
+import java.util.*;
 class Solution {
-    static boolean[] vis;
-    static int answer = -1;
+    boolean[] vis;
+    int max = 0;
     public int solution(int k, int[][] dungeons) {
-        int dunSize = dungeons.length;
-        vis = new boolean[dunSize];
-        dfs(k,0, dunSize,0, dungeons);
-        
+        int answer = -1;
+        int n = dungeons.length;
+        for(int i =0 ; i<n; i++){
+            vis = new boolean[n];
+            vis[i] = true;
+            dfs(dungeons, i, 0, n, k, 0);
+        }
+        answer = max;
         return answer;
     }
-    static void dfs(int k, int dep, int dunSize, int max, int[][] dungeons){
-        if(dep==dunSize){
-            answer = Math.max(max, answer);
+    public void dfs(int[][] dung, int idx, int dep, int n, int k, int ans){
+        if(dung[idx][0]<=k){
+            k-=dung[idx][1];
+            ans++;  
+        }
+        
+        if(dep==n-1){
+            max = Math.max(max, ans);
             return;
         }
-        for(int i =0; i<dunSize; i++){
+
+        
+        for(int i = 0; i<n; i++){
             if(vis[i])continue;
-            int minF = dungeons[i][0];
-            int exF = dungeons[i][1];
             vis[i] = true;
-            
-            if(k>=minF){
-                dfs(k-exF, dep+1, dunSize, max+1, dungeons);    
-            }else{
-                dfs(k, dep+1, dunSize, max,dungeons);
-            }
-            vis[i] = false;
+            dfs(dung, i, dep +1, n, k, ans);
+            vis[i] = false;            
             
         }
     }
