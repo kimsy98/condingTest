@@ -34,7 +34,7 @@ class Solution {
         return answer;
     }
     public void bfs(int[] dist, List<Node>[] map){
-        PriorityQueue<Node> q = new PriorityQueue<>((a,b)->a.time-b.time);
+        Queue<Node> q = new LinkedList<>();
         q.add(new Node(0,0));
         
         while(!q.isEmpty()){
