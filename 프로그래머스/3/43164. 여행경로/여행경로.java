@@ -1,29 +1,36 @@
 import java.util.*;
 class Solution {
-    static boolean[] vis;
-    static List<String> li = new ArrayList<>();
+    boolean[] vis;
+    boolean check;
+    List<String> answer = new ArrayList<>();
     
     public String[] solution(String[][] tickets) {
-        String[] answer = {};
+        Arrays.sort(tickets, (a,b)->a[1].compareTo(b[1]));
         vis = new boolean[tickets.length];
+        List<String> path = new ArrayList<>();
+        path.add("ICN");
+        dfs("ICN", 0,tickets, vis, path);
+            System.out.println(answer+" :answer+out");
         
-        dfs(0,"ICN", "ICN", tickets);
-        Collections.sort(li);
-        answer = li.get(0).split(" ");
-        return answer;
+        return answer.stream().toArray(String[]::new);
     }
-    static void dfs(int dep, String plan, String now, String[][] tickets){
+    public void dfs(String now,int dep, String[][] tickets, boolean[] vis , List<String> path){
+        if(check) return;
         if(dep==tickets.length){
-            li.add(plan);
+            answer = new ArrayList(path);
+            check = true;
+            return;
         }
-        for(int i=0; i<vis.length;i++){
-            
-            if(!vis[i]&&now.equals(tickets[i][0])){
-                vis[i] =true;
-                
-                dfs(dep+1,plan+" "+tickets[i][1], tickets[i][1], tickets);
-                vis[i] = false;
-            }
+        
+        for(int i = 0; i<tickets.length; i++){
+            if(vis[i]||!now.equals(tickets[i][0]))continue;
+            vis[i] = true;
+            path.add(tickets[i][1]);
+            dfs(tickets[i][1], dep+1, tickets, vis, path);
+            vis[i] = false;
+            path.remove(path.size()-1);
         }
+        
+        
     }
 }
