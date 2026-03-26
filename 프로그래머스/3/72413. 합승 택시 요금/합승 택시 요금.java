@@ -35,6 +35,7 @@ class Solution {
             Node no = pq.poll();
             int pos = no.node;
             int charge = no.charge;
+            if (minArr[pos] < charge) continue;
             for(int i = 0 ; i< taxiMap[pos].size(); i++){
                 if(charge+taxiMap[pos].get(i).charge< minArr[taxiMap[pos].get(i).node]){
                     minArr[taxiMap[pos].get(i).node] = charge+taxiMap[pos].get(i).charge;
@@ -48,6 +49,7 @@ class Solution {
             Node no = pq.poll();
             int pos = no.node;
             int charge = no.charge;
+            if (minArrA[pos] < charge) continue;
             for(int i = 0 ; i< taxiMap[pos].size(); i++){
                 if(charge+taxiMap[pos].get(i).charge< minArrA[taxiMap[pos].get(i).node]){
                     minArrA[taxiMap[pos].get(i).node] = charge+taxiMap[pos].get(i).charge;
@@ -61,6 +63,7 @@ class Solution {
             Node no = pq.poll();
             int pos = no.node;
             int charge = no.charge;
+            if (minArrB[pos] < charge) continue;
             for(int i = 0 ; i< taxiMap[pos].size(); i++){
                 if(charge+taxiMap[pos].get(i).charge< minArrB[taxiMap[pos].get(i).node]){
                     minArrB[taxiMap[pos].get(i).node] = charge+taxiMap[pos].get(i).charge;
