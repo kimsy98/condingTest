@@ -1,50 +1,51 @@
 import java.util.*;
-import java.io.*;
 class Solution {
+    static final int FINAL_TIME = 60*23+59;
+    
     public int[] solution(int[] fees, String[] records) {
-        int[] answer = {};
-        
-        Map<Integer, Integer> totalRecords = new HashMap<>();
-        Map<Integer, Integer> record = new HashMap<>();
-        
-        for(String reco : records){
-            String[] data = reco.split(" ");
-            String[] time = data[0].split(":");
-            
-            int totalTime = Integer.parseInt(time[0])*60 + Integer.parseInt(time[1]);
-            int carNumber = Integer.parseInt(data[1]);
-            String type = data[2];
-            
-            if(type.equals("IN")){
-                record.put(carNumber, totalTime);
+        List<Integer> answer = new ArrayList<>();
+        StringTokenizer st;
+        Map<Integer, Integer> map = new HashMap<>();
+        Map<Integer, Integer> totalMap = new HashMap<>();
+
+        for(String record :records){
+            st = new StringTokenizer(record);
+            String[] arr = st.nextToken().split(":");
+            int time = Integer.parseInt(arr[0])*60+Integer.parseInt(arr[1]);
+            int carNumber = Integer.parseInt(st.nextToken());
+            String state = st.nextToken();
+            // System.out.println(time + " / " + carNumber + " / " + state );
+            if(state.equals("IN")){
+                map.put(carNumber, time);
             }else{
-                int inTime = record.get(carNumber);
-                record.remove(carNumber);
-                totalRecords.put(carNumber, totalRecords.getOrDefault(carNumber, 0) + totalTime- inTime);
+                totalMap.put(carNumber, totalMap.getOrDefault(carNumber,0)+time-map.get(carNumber));
+                map.remove(carNumber);
             }
         }
-        record.forEach((key, value)->{
-            int totalTime = 23*60 + 59;
-            int carNumber = key;
-            int inTime = value;
-            totalRecords.put(carNumber, totalRecords.getOrDefault(carNumber, 0) + totalTime- inTime);
-        });
-                
-        List<Integer> keySet = new ArrayList(totalRecords.keySet());
+        for(int key : map.keySet()){
+            totalMap.put(key, totalMap.getOrDefault(key,0)+FINAL_TIME-map.get(key));
+        }
+        
+        List<Integer> keySet = new ArrayList(totalMap.keySet());
         Collections.sort(keySet);
-        answer = new int[keySet.size()];
-        int count = 0;
-        for(Integer key : keySet){
-            int time = totalRecords.get(key);
-            if(time > fees[0]){
-                answer[count] = fees[1] + ((int) Math.ceil((double)(time - fees[0]) / fees[2])) * fees[3];            
-            }else{
-                answer[count] = fees[1];
-            }
-            // System.out.println(time);
-            count++;
+        for(int key : keySet){
+            answer.add(calcul(totalMap.get(key), fees));
         }
         
-        return answer;
+        return answer.stream().mapToInt(Integer::intValue).toArray();
+    }
+    
+    
+    
+    
+    public int calcul(int totalTime, int[] fees){
+        int basicHour = fees[0];
+        int basicFee = fees[1];
+        int unitTime = fees[2];
+        int unitFee = fees[3];
+
+        int result = basicFee+(int)Math.ceil(((float)totalTime-(float)basicHour)/unitTime) *unitFee;
+        if(result<basicFee) result = basicFee;
+        return result;
     }
 }
