@@ -52,7 +52,7 @@ class Solution {
             int nowNode = no.node;
             int nowW = no.w;
             
-            if(arr[nowNode]<nowW)continue;
+            // if(arr[nowNode]<nowW)continue;
             
             for(int i = 0; i<map[nowNode].size(); i++){
                 Node nextNode = map[nowNode].get(i);
