@@ -1,85 +1,66 @@
 import java.util.*;
 class Node{
     int node;
-    int charge;
-    
-    Node(int node, int charge){
+    int w;
+    Node(int node, int w){
         this.node = node;
-        this.charge = charge;
+        this.w = w;
     }
 }
 class Solution {
-    
+    int[] sArr;
+    int[] aArr;
+    int[] bArr;
     public int solution(int n, int s, int a, int b, int[][] fares) {
         int answer = Integer.MAX_VALUE;
-        List<Node>[] taxiMap = new ArrayList[n];
-        int[] minArr = new int[n];
-        Arrays.fill(minArr, Integer.MAX_VALUE);
-        minArr[s-1] = 0;
-        int[] minArrA = new int[n];
-        Arrays.fill(minArrA, Integer.MAX_VALUE);
-        minArrA[a-1] = 0;
-        int[] minArrB = new int[n];
-        Arrays.fill(minArrB, Integer.MAX_VALUE);
-        minArrB[b-1] = 0;
-        for(int i =0; i<n; i++){
-            taxiMap[i] = new ArrayList<>();
+        List<Node>[] map = new ArrayList[n];
+        for(int i = 0 ; i<n; i++){
+            map[i] = new ArrayList<>();
         }
-        for(int[] fare : fares){
-            taxiMap[fare[0]-1].add(new Node(fare[1]-1, fare[2])); 
-            taxiMap[fare[1]-1].add(new Node(fare[0]-1, fare[2])); 
-        }
-        PriorityQueue<Node> pq = new PriorityQueue<>((o1,o2)-> o1.charge-o2.charge);
-        pq.add(new Node(s-1, 0));
-        while(!pq.isEmpty()){
-            Node no = pq.poll();
-            int pos = no.node;
-            int charge = no.charge;
-            if (minArr[pos] < charge) continue;
-            for(int i = 0 ; i< taxiMap[pos].size(); i++){
-                if(charge+taxiMap[pos].get(i).charge< minArr[taxiMap[pos].get(i).node]){
-                    minArr[taxiMap[pos].get(i).node] = charge+taxiMap[pos].get(i).charge;
-                    pq.add(new Node(taxiMap[pos].get(i).node, charge+taxiMap[pos].get(i).charge));
-                }else continue;
-            }
-            
-        }
-        pq.add(new Node(a-1, 0));
-        while(!pq.isEmpty()){
-            Node no = pq.poll();
-            int pos = no.node;
-            int charge = no.charge;
-            if (minArrA[pos] < charge) continue;
-            for(int i = 0 ; i< taxiMap[pos].size(); i++){
-                if(charge+taxiMap[pos].get(i).charge< minArrA[taxiMap[pos].get(i).node]){
-                    minArrA[taxiMap[pos].get(i).node] = charge+taxiMap[pos].get(i).charge;
-                    pq.add(new Node(taxiMap[pos].get(i).node, charge+taxiMap[pos].get(i).charge));
-                }else continue;
-            }
-            
-        }
-        pq.add(new Node(b-1, 0));
-        while(!pq.isEmpty()){
-            Node no = pq.poll();
-            int pos = no.node;
-            int charge = no.charge;
-            if (minArrB[pos] < charge) continue;
-            for(int i = 0 ; i< taxiMap[pos].size(); i++){
-                if(charge+taxiMap[pos].get(i).charge< minArrB[taxiMap[pos].get(i).node]){
-                    minArrB[taxiMap[pos].get(i).node] = charge+taxiMap[pos].get(i).charge;
-                    pq.add(new Node(taxiMap[pos].get(i).node, charge+taxiMap[pos].get(i).charge));
-                }else continue;
-            }
-            
-        }
-        // System.out.println(Arrays.toString(minArr));
-        // System.out.println(Arrays.toString(minArrA));
-        // System.out.println(Arrays.toString(minArrB));
-        // System.out.println(2147483647+);
+        sArr = new int[n];
+        aArr = new int[n];
+        bArr = new int[n];
+        Arrays.fill(sArr, 100000*200);
+        Arrays.fill(aArr, 100000*200);
+        Arrays.fill(bArr, 100000*200);
+        sArr[s-1] = 0;
+        aArr[a-1] = 0;
+        bArr[b-1] = 0;
         
-        for(int i = 0; i<n; i++){
-            answer = Math.min(minArr[i]+minArrA[i]+minArrB[i], answer);
+        for(int[] fare : fares){
+            map[fare[0]-1].add(new Node(fare[1]-1,fare[2]));
+            map[fare[1]-1].add(new Node(fare[0]-1,fare[2]));
         }
+        
+        dijkstra(sArr, map, s-1);
+        dijkstra(aArr, map, a-1);
+        dijkstra(bArr, map, b-1);
+
+        for(int i = 0; i<n; i++){
+            answer = Math.min(answer, sArr[i]+aArr[i]+bArr[i]);
+        }
+        
+        
         return answer;
+    }
+    public void dijkstra(int[] arr, List<Node>[] map, int start){
+        PriorityQueue<Node> pq = new PriorityQueue<>((o1,o2)->o1.w - o2.w);
+        
+        pq.add(new Node(start, 0));
+        while(!pq.isEmpty()){
+            Node no = pq.poll();
+            int nowNode = no.node;
+            int nowW = no.w;
+            
+            if(arr[nowNode]<nowW)continue;
+            
+            for(int i = 0; i<map[nowNode].size(); i++){
+                Node nextNode = map[nowNode].get(i);
+                if(arr[nextNode.node]<nowW+nextNode.w)continue;
+                arr[nextNode.node] = Math.min(arr[nextNode.node], nowW+nextNode.w); 
+                pq.add(new Node(nextNode.node, arr[nextNode.node]));
+            }
+            
+        }
     }
 }
