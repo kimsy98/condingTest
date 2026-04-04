@@ -1,24 +1,24 @@
-import java.util.*;
 class Solution {
     public int solution(String skill, String[] skill_trees) {
         int answer = 0;
-        
-        for(String skill_tree : skill_trees){
-            boolean check = true;
-            int nowIdx = 0;
-            
-            for(char s : skill_tree.toCharArray()){
-                int skillIdx = skill.indexOf(s);
-                if(skillIdx==-1)continue;
-                if(skillIdx==nowIdx){
-                    nowIdx++;
-                }else{
+        int skillIdx = 0;
+        boolean check = true;
+                
+        for(String skillTree : skill_trees){
+            skillIdx = 0;
+            check = true;
+            for(char s : skillTree.toCharArray()){
+                int idx = skill.indexOf(s); 
+                if(idx==-1)continue;
+                if(skillIdx==idx)skillIdx++;
+                else{
                     check = false;
                     break;
                 }
                 
-            }
+            }   
             if(check) answer++;
+            
         }
         
         return answer;
