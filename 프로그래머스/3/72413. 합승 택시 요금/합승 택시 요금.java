@@ -52,12 +52,12 @@ class Solution {
             int nowNode = no.node;
             int nowW = no.w;
             
-            // if(arr[nowNode]<nowW)continue;
+            if(arr[nowNode]<nowW)continue;
             
             for(int i = 0; i<map[nowNode].size(); i++){
                 Node nextNode = map[nowNode].get(i);
                 if(arr[nextNode.node]<nowW+nextNode.w)continue;
-                arr[nextNode.node] = Math.min(arr[nextNode.node], nowW+nextNode.w); 
+                arr[nextNode.node] = nowW+nextNode.w; 
                 pq.add(new Node(nextNode.node, arr[nextNode.node]));
             }
             
