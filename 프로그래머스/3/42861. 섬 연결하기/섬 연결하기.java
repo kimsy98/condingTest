@@ -1,31 +1,34 @@
 import java.util.*;
 class Solution {
+    int[] parent;
     public int solution(int n, int[][] costs) {
         int answer = 0;
-        PriorityQueue<int[]> pq = new PriorityQueue<>((o1,o2)->o1[1]-o2[1]);
-        List<int[]>[] arr = new ArrayList[n];
-        boolean[] visit = new boolean[n];
-        for(int i =0; i<n;i++){
-            arr[i] = new ArrayList<>();
+        parent = new int[n];
+        for(int i = 0 ; i<n; i++){
+            parent[i] = i;
         }
-        for(int[] cost : costs){
-            arr[cost[0]].add(new int[]{cost[1],cost[2]});
-            arr[cost[1]].add(new int[]{cost[0],cost[2]});   
-        }
-        int cnt=0;
+        Arrays.sort(costs, (a,b)-> a[2]-b[2]);
         
-        pq.add(new int[]{0,0});
-        while(!pq.isEmpty()&&cnt<n){
-            int[] cost = pq.poll();
-            if(visit[cost[0]])continue;
-            visit[cost[0]] = true;
-            answer+=cost[1];
-            cnt++;
-            for(int[] next : arr[cost[0]]){
-                if(!visit[next[0]])pq.add(new int[]{next[0], next[1]});
-            }
+        for(int[] cost : costs){
+            int from = cost[0];
+            int to = cost[1];
+            int co = cost[2];
             
+            if(find(from)!=find(to)){
+                union(from, to);
+                answer+=co;
+                
+            }
         }
         return answer;
+    }
+    public int find(int x){
+        if(parent[x] == x)return x;
+        return parent[x] = find(parent[x]);
+    }
+    public void union(int x, int y){
+        int rootX = find(x);
+        int rootY = find(y);
+        if(rootX!=rootY) parent[rootY] = rootX;
     }
 }
